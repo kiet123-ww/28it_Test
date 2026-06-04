@@ -1,21 +1,32 @@
-import { expect, Page } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
+import { BasePage } from './BasePage';
 
-export class LoginPage {
-  constructor(private page: Page) {}
+export class LoginPage extends BasePage {
+  readonly emailInput: Locator;
+  readonly passwordInput: Locator;
+  readonly loginButton: Locator;
+  readonly errorMessage: Locator;
 
-  async goto() {
-    await this.page.goto('/login');
+  constructor(page: Page) {
+    super(page);
+    this.emailInput = page.locator('input[name="email"], input[type="email"]');
+    this.passwordInput = page.locator('input[name="password"], input[type="password"]');
+    this.loginButton = page.locator('button[type="submit"], button:has-text("Đăng nhập")');
+    this.errorMessage = page.locator('.error-message, .alert-danger, [role="alert"]');
   }
 
-  async login(email: string, password: string) {
-    await this.page.getByRole('textbox').first().fill(email);
-    await this.page.getByLabel(/password|mật khẩu/i).fill(password);
-    await this.page.getByRole('button', { name: /login|đăng nhập/i }).click();
+  async login(email: string, pass: string) {
+    await this.fillInput(this.emailInput, email);
+    await this.fillInput(this.passwordInput, pass);
+    await this.clickElement(this.loginButton);
   }
 
-  async expectLoginPageVisible() {
-    await expect(
-      this.page.getByRole('button', { name: /login|đăng nhập/i })
-    ).toBeVisible();
+  async verifyErrorIsDisplayed() {
+    await expect(this.errorMessage).toBeVisible({ timeout: 5000 });
+  }
+
+  async verifySuccessNavigation(expectedUrlPart: string) {
+    await this.page.waitForURL(new RegExp(expectedUrlPart), { timeout: 10000 });
+    expect(this.page.url()).toContain(expectedUrlPart);
   }
 }
