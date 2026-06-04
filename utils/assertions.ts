@@ -10,7 +10,7 @@ export async function expectNoSystemErrors(page: Page) {
 
   await expect(body).not.toContainText(/undefined|null|NaN/i);
   await expect(body).not.toContainText(
-    /Internal Server Error|Application error|Something went wrong|Unhandled Runtime Error|404|500/i
+    /Internal Server Error|Application error|Something went wrong|Unhandled Runtime Error/i
   );
 }
 

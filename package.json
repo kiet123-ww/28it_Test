@@ -13,6 +13,9 @@
     "test:auth": "playwright test tests/login-authentication.spec.ts --project=chromium",
     "test:auth:start-app": "cross-env PW_START_APP=1 playwright test tests/login-authentication.spec.ts --project=chromium",
     "test:job": "playwright test tests/job-search-detail.spec.ts --project=chromium",
+    "seed:candidate": "cd D:/Fullstack/Project-CNPM/my-backend && yarn seed:candidate-account",
+    "seed:recruiter": "cd D:/Fullstack/Project-CNPM/recruitment-backend && npm run seed:recruiter-account",
+    "seed:admin": "cd D:/Fullstack/Project-CNPM/Admin-web-backend && npm run seed:admin",
     "report": "playwright show-report"
   },
   "keywords": [
@@ -24,7 +27,8 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.60.0",
-    "@types/node": "^25.9.1"
+    "@types/node": "^25.9.1",
+    "typescript": "^6.0.3"
   },
   "dependencies": {
     "cross-env": "^7.0.3",

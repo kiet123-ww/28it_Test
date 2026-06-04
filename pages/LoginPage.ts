@@ -1,6 +1,6 @@
 import { expect, Page } from '@playwright/test';
 import { BasePage } from './BasePage';
-import { env } from '../utils/env';
+import { env, recruiterUrl } from '../utils/env';
 
 const emailSelectors = [
   'input[name="email"]',
@@ -24,7 +24,7 @@ export class LoginPage extends BasePage {
   }
 
   async goto() {
-    await super.goto(env.routes.login);
+    await super.goto(recruiterUrl(env.routes.login));
   }
 
   emailInput() {
