@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
+    "test:start-app": "cross-env PW_START_APP=1 playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
     "test:chromium": "playwright test --project=chromium",
     "test:auth": "playwright test tests/login-authentication.spec.ts --project=chromium",
+    "test:auth:start-app": "cross-env PW_START_APP=1 playwright test tests/login-authentication.spec.ts --project=chromium",
     "test:job": "playwright test tests/job-search-detail.spec.ts --project=chromium",
     "report": "playwright show-report"
   },
@@ -25,6 +27,7 @@
     "@types/node": "^25.9.1"
   },
   "dependencies": {
+    "cross-env": "^7.0.3",
     "dotenv": "^17.4.2"
   }
 }

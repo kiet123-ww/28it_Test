@@ -2,68 +2,76 @@ import { expect, Page } from '@playwright/test';
 import { BasePage } from './BasePage';
 import { env } from '../utils/env';
 
+const emailSelectors = [
+  'input[name="email"]',
+  'input[type="email"]',
+  'input[placeholder="Email"]',
+];
+
+const passwordSelectors = [
+  'input[name="password"]',
+  'input[type="password"]',
+];
+
+const submitSelectors = [
+  'button[type="submit"]',
+  'input[type="submit"]',
+];
+
 export class LoginPage extends BasePage {
   constructor(page: Page) {
     super(page);
   }
 
-  async gotoLoginPage() {
-    await this.goto(env.routes.login);
+  async goto() {
+    await super.goto(env.routes.login);
   }
 
-  async expectLoginPageVisible() {
-    await this.expectBodyVisible();
+  emailInput() {
+    return this.locator(emailSelectors);
+  }
 
-    const body = this.page.locator('body');
+  passwordInput() {
+    return this.locator(passwordSelectors);
+  }
 
-    await expect(body).toContainText(/login|đăng nhập|email|password|mật khẩu/i);
+  submitButton() {
+    return this.locator(submitSelectors);
+  }
+
+  async expectLoaded() {
+    await this.expectPageReady();
+    await expect(this.emailInput()).toBeVisible();
+    await expect(this.passwordInput()).toBeVisible();
+    await expect(this.submitButton()).toBeVisible();
   }
 
   async fillEmail(email: string) {
-    await this.fillFirstAvailable(
-      [
-        'input[name="email"]',
-        'input[type="email"]',
-        'input[placeholder*="email" i]',
-        'input[placeholder*="Email" i]',
-        'input[placeholder*="tài khoản" i]',
-      ],
-      email
-    );
+    await this.fill(emailSelectors, email);
   }
 
   async fillPassword(password: string) {
-    await this.fillFirstAvailable(
-      [
-        'input[name="password"]',
-        'input[type="password"]',
-        'input[placeholder*="password" i]',
-        'input[placeholder*="mật khẩu" i]',
-      ],
-      password
-    );
+    await this.fill(passwordSelectors, password);
   }
 
-  async clickLoginButton() {
-    await this.clickFirstAvailable([
-      'button[type="submit"]',
-      'button:has-text("Login")',
-      'button:has-text("Đăng nhập")',
-      'input[type="submit"]',
-    ]);
+  async submit() {
+    await this.click(submitSelectors);
   }
 
   async login(email: string, password: string) {
     await this.fillEmail(email);
     await this.fillPassword(password);
-    await this.clickLoginButton();
+    await this.submit();
   }
 
-  async expectLoginFailedMessage() {
-    const body = this.page.locator('body');
+  async expectValidationError(pattern: RegExp) {
+    await expect(this.page.locator('body')).toContainText(pattern);
+  }
 
-    await expect(body).toContainText(
-      /sai|không đúng|invalid|failed|error|thất bại|email|password|mật khẩu/i
+  async expectLoginFailed() {
+    await expect(this.page.locator('body')).toContainText(
+      /sai|không|khong|thất bại|that bai|invalid|error|khóa|khoa|tài khoản|tai khoan|mật khẩu|mat khau/i
     );
+    await expect(this.page).toHaveURL(/\/user\/login/);
   }
 }

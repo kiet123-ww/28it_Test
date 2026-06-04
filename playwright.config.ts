@@ -3,6 +3,8 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+const baseURL = process.env.BASE_URL || 'http://localhost:3000';
+
 export default defineConfig({
   testDir: './tests',
 
@@ -25,7 +27,7 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    baseURL,
 
     headless: true,
 
@@ -45,4 +47,27 @@ export default defineConfig({
       },
     },
   ],
+
+  webServer:
+    process.env.PW_START_APP === '1'
+      ? [
+          {
+            command: 'npm run dev',
+            cwd: 'D:/Fullstack/Project-CNPM/recruitment-backend',
+            url: `${process.env.API_URL || 'http://localhost:5000'}/health`,
+            reuseExistingServer: true,
+            timeout: 120_000,
+          },
+          {
+            command: 'npm run dev',
+            cwd: 'D:/Fullstack/Project-CNPM/recruitment-client',
+            url: baseURL,
+            reuseExistingServer: true,
+            timeout: 120_000,
+            env: {
+              NEXT_PUBLIC_API_URL: process.env.API_URL || 'http://localhost:5000',
+            },
+          },
+        ]
+      : undefined,
 });

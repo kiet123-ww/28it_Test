@@ -1,51 +1,62 @@
 import { expect, Locator, Page } from '@playwright/test';
 
 export class BasePage {
-  readonly page: Page;
+  constructor(protected readonly page: Page) {}
 
-  constructor(page: Page) {
-    this.page = page;
-  }
-
-  async goto(path: string) {
-    await this.page.goto(path);
+  async goto(pathOrUrl: string) {
+    await this.page.goto(pathOrUrl);
     await this.page.waitForLoadState('domcontentloaded');
   }
 
+  locator(selectors: string[]): Locator {
+    return this.page.locator(selectors.join(', ')).first();
+  }
+
+  async fill(selectors: string[], value: string) {
+    const field = this.locator(selectors);
+    await expect(field).toBeVisible();
+    await field.fill(value);
+  }
+
+  async click(selectors: string[]) {
+    const target = this.locator(selectors);
+    await expect(target).toBeVisible();
+    await target.click();
+  }
+
+  async fillInput(locator: Locator, value: string) {
+    await expect(locator.first()).toBeVisible();
+    await locator.first().fill(value);
+  }
+
+  async clickElement(locator: Locator) {
+    await expect(locator.first()).toBeVisible();
+    await locator.first().click();
+  }
+
   async getByPossibleSelectors(selectors: string[]): Promise<Locator> {
-    for (const selector of selectors) {
-      const locator = this.page.locator(selector).first();
-
-      if (await locator.count()) {
-        return locator;
-      }
-    }
-
-    return this.page.locator(selectors[0]).first();
+    return this.locator(selectors);
   }
 
   async fillFirstAvailable(selectors: string[], value: string) {
-    const locator = await this.getByPossibleSelectors(selectors);
-    await expect(locator).toBeVisible();
-    await locator.fill(value);
+    await this.fill(selectors, value);
   }
 
   async clickFirstAvailable(selectors: string[]) {
-    const locator = await this.getByPossibleSelectors(selectors);
-    await expect(locator).toBeVisible();
-    await locator.click();
+    await this.click(selectors);
+  }
+
+  async expectPageReady() {
+    await expect(this.page.locator('body')).toBeVisible();
   }
 
   async expectBodyVisible() {
-    await expect(this.page.locator('body')).toBeVisible();
+    await this.expectPageReady();
   }
 
   async expectNoCommonSystemErrors() {
     const body = this.page.locator('body');
 
-    await expect(body).not.toContainText('undefined');
-    await expect(body).not.toContainText('null');
-    await expect(body).not.toContainText('NaN');
-    await expect(body).not.toContainText('Internal Server Error');
+    await expect(body).not.toContainText(/undefined|null|NaN|Internal Server Error/i);
   }
 }

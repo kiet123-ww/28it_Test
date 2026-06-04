@@ -1,10 +1,10 @@
 {
+  "recruiter": {
+    "email": "kvu4488@gmail.com",
+    "password": "123"
+  },
   "candidate": {
     "email": "candidate.test@example.com",
-    "password": "Secret123!"
-  },
-  "recruiter": {
-    "email": "recruiter.test@example.com",
     "password": "Secret123!"
   },
   "admin": {
@@ -12,7 +12,7 @@
     "password": "Secret123!"
   },
   "invalid": {
-    "email": "wrong-email",
+    "email": "notfound@example.com",
     "password": "wrong-password"
   }
 }

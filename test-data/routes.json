@@ -1,6 +1,11 @@
 {
-  "login": "/login",
-  "register": "/register",
-  "jobs": "/jobs",
-  "candidateDashboard": "/candidate/dashboard"
+  "home": "/",
+  "login": "/user/login",
+  "forgotPassword": "/user/forgot",
+  "recruiterDashboard": "/dashboard",
+  "companyProfile": "/company-profile",
+  "jobManagement": "/recruitment-news",
+  "applicationManagement": "/candidates",
+  "candidateDashboard": "/candidate/dashboard",
+  "adminLogin": "http://localhost:5173/login"
 }
