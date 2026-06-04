@@ -1,8 +1,63 @@
+# Dependencies
 node_modules/
-/test-results/
-/playwright-report/
-/playwright/.cache/
+
+# Environment variables
 .env
 .env.local
-.DS_Store
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# Playwright generated files
+playwright-report/
+test-results/
+blob-report/
+
+# Reports
+coverage/
+reports/
+html-report/
+
+# Logs
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Cache / build
+dist/
+build/
+.cache/
+.tmp/
+temp/
+tmp/
+.next/
+out/
+*.tsbuildinfo
+
+# IDE / OS
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Excel temp
+~$*.xlsx
+~$*.xls
+~$*.csv
+
+# Local sensitive test data
+test-data/private/
+test-data/secrets/
+test-data/accounts.local.json
+test-data/users.local.json
+
+# Local upload/download test folders
+uploads/
+downloads/
