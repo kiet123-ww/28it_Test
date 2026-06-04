@@ -1,21 +1,25 @@
 {
   "name": "28itjobs-automation-test",
   "version": "1.0.0",
-  "description": "",
+  "description": "Automation test project for 28ITjobs using Playwright",
   "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
   "scripts": {
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:chromium": "playwright test --project=chromium",
+    "test:auth": "playwright test tests/login-authentication.spec.ts --project=chromium",
+    "test:job": "playwright test tests/job-search-detail.spec.ts --project=chromium",
     "report": "playwright show-report"
   },
-  "keywords": [],
+  "keywords": [
+    "playwright",
+    "automation-test",
+    "28itjobs"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "@types/node": "^25.9.1"

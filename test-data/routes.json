@@ -1,0 +1,6 @@
+{
+  "login": "/login",
+  "register": "/register",
+  "jobs": "/jobs",
+  "candidateDashboard": "/candidate/dashboard"
+}

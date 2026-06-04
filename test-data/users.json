@@ -1,0 +1,18 @@
+{
+  "candidate": {
+    "email": "candidate.test@example.com",
+    "password": "Secret123!"
+  },
+  "recruiter": {
+    "email": "recruiter.test@example.com",
+    "password": "Secret123!"
+  },
+  "admin": {
+    "email": "admin.test@example.com",
+    "password": "Secret123!"
+  },
+  "invalid": {
+    "email": "wrong-email",
+    "password": "wrong-password"
+  }
+}

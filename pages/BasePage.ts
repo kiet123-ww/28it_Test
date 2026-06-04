@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 
 export class BasePage {
   readonly page: Page;
@@ -7,31 +7,45 @@ export class BasePage {
     this.page = page;
   }
 
-  async navigateTo(url: string) {
-    await this.page.goto(url);
+  async goto(path: string) {
+    await this.page.goto(path);
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
-  async waitForElement(selector: string | Locator) {
-    if (typeof selector === 'string') {
-      await this.page.waitForSelector(selector);
-    } else {
-      await selector.waitFor();
+  async getByPossibleSelectors(selectors: string[]): Promise<Locator> {
+    for (const selector of selectors) {
+      const locator = this.page.locator(selector).first();
+
+      if (await locator.count()) {
+        return locator;
+      }
     }
+
+    return this.page.locator(selectors[0]).first();
   }
 
-  async fillInput(selector: string | Locator, text: string) {
-    if (typeof selector === 'string') {
-      await this.page.fill(selector, text);
-    } else {
-      await selector.fill(text);
-    }
+  async fillFirstAvailable(selectors: string[], value: string) {
+    const locator = await this.getByPossibleSelectors(selectors);
+    await expect(locator).toBeVisible();
+    await locator.fill(value);
   }
 
-  async clickElement(selector: string | Locator) {
-    if (typeof selector === 'string') {
-      await this.page.click(selector);
-    } else {
-      await selector.click();
-    }
+  async clickFirstAvailable(selectors: string[]) {
+    const locator = await this.getByPossibleSelectors(selectors);
+    await expect(locator).toBeVisible();
+    await locator.click();
+  }
+
+  async expectBodyVisible() {
+    await expect(this.page.locator('body')).toBeVisible();
+  }
+
+  async expectNoCommonSystemErrors() {
+    const body = this.page.locator('body');
+
+    await expect(body).not.toContainText('undefined');
+    await expect(body).not.toContainText('null');
+    await expect(body).not.toContainText('NaN');
+    await expect(body).not.toContainText('Internal Server Error');
   }
 }
